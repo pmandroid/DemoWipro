@@ -4,13 +4,22 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+/**
+ * The type Network observer.
+ */
 public class NetworkObserver {
 
-    public static boolean isNetworkAvailable(Context activity) {
+    /**
+     * Is network available boolean.
+     *
+     * @param context the context
+     * @return the boolean
+     */
+    public static boolean isNetworkAvailable(Context context) {
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context
                 .CONNECTIVITY_SERVICE);
 
         if (cm != null) {

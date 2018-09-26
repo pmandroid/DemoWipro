@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MVVM</string>
+    <string name="app_name">Demo Wipro</string>
     <string name="ok">"OK"</string>
     <string name="network_unavailable">"Network Unavailable!"</string>
     <string name="network">Network Error</string>

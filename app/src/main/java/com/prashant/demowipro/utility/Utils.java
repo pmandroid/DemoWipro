@@ -6,8 +6,16 @@ import android.content.DialogInterface;
 
 import com.prashant.demowipro.R;
 
+/**
+ * The type Utils.
+ */
 public class Utils {
 
+    /**
+     * Network dialog.
+     *
+     * @param activity the activity
+     */
     public static void networkDialog(final Activity activity) {
 
         try {
