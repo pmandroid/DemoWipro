@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">DemoWipro</string>
+    <string name="app_name">MVVM</string>
+    <string name="ok">"OK"</string>
+    <string name="network_unavailable">"Network Unavailable!"</string>
+    <string name="network">Network Error</string>
+    <string name="no_network">"Seems like there is a problem with your Internet Connection. Check your network and try again."</string>
+    <string name="no_internet">"No Internet Connection! Please check your Network Connection and Try Again."</string>
 </resources>
