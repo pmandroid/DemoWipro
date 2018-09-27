@@ -18,12 +18,12 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        if (NetworkObserver.isNetworkAvailable(MainActivity.this))
+//Removed dialogue to test data caching.
+    //    if (NetworkObserver.isNetworkAvailable(MainActivity.this))
             getFragmentManager().beginTransaction().add(R.id.fl_container, AboutListFragment
                     .getInstance())
                     .commit();
-        else
-            Utils.networkDialog(MainActivity.this);
+//        else
+//            Utils.networkDialog(MainActivity.this);
     }
 }
