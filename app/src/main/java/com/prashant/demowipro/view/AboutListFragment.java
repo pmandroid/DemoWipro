@@ -1,11 +1,12 @@
 package com.prashant.demowipro.view;
 
-import android.app.Fragment;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -90,7 +91,9 @@ public class AboutListFragment extends Fragment implements ICompletedListener, S
         if (aboutListFragmentBinding.swipeRefreshLayout.isRefreshing()) {
             aboutListFragmentBinding.swipeRefreshLayout.setRefreshing(false);
         }
-        getActivity().setTitle(viewModel.getTitle());
+        if (viewModel != null) {
+            getActivity().setTitle(viewModel.getTitle());
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.prashant.demowipro.R;
  */
 public class MainActivity extends BaseActivity {
 
+
     public static final String IS_FIRST_TIME = "is_first_time";
 
     @Override
@@ -20,7 +21,7 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().add(R.id.fl_container, AboutListFragment
+            getSupportFragmentManager().beginTransaction().add(R.id.fl_container, AboutListFragment
                     .getInstance())
                     .commit();
         }
