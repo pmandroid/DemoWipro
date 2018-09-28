@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.prashant.demowipro.R;
 import com.prashant.demowipro.model.bean.RowsItem;
 
 /**
@@ -30,16 +29,6 @@ public class RawItemViewModel extends BaseObservable {
         this.rowsItem = rowsItem;
     }
 
-
-    /**
-     * Gets image url.
-     *
-     * @return the image url
-     */
-    public String getImageUrl() {
-        return rowsItem.getImageHref();
-    }
-
     /**
      * Load image.
      *
@@ -51,18 +40,25 @@ public class RawItemViewModel extends BaseObservable {
 
         RequestOptions options = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.ic_no_image)
-                .error(R.drawable.ic_no_image)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
 
-        Glide.with(imageView.getContext()).load(url)
-                .apply(options)
+            Glide.with(imageView.getContext()).load(url)
+                    .apply(options)
 
-                .into(imageView);
+                    .into(imageView);
+
 
     }
 
+    /**
+     * Gets image url.
+     *
+     * @return the image url
+     */
+    public String getImageUrl() {
+        return rowsItem.getImageHref();
+    }
 
     /**
      * Gets title.

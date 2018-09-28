@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.prashant.demowipro.R;
-import com.prashant.demowipro.utility.NetworkObserver;
-import com.prashant.demowipro.utility.Utils;
 
 /**
  * The type Main activity.
  */
 public class MainActivity extends BaseActivity {
+
+    public static final String IS_FIRST_TIME = "is_first_time";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +18,17 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//Removed dialogue to test data caching.
-    //    if (NetworkObserver.isNetworkAvailable(MainActivity.this))
+
+        if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().add(R.id.fl_container, AboutListFragment
                     .getInstance())
                     .commit();
-//        else
-//            Utils.networkDialog(MainActivity.this);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(IS_FIRST_TIME, false);
     }
 }

@@ -3,6 +3,7 @@
     <dimen name="dimen_60x">60dp</dimen>
     <dimen name="dimen_80x">80dp</dimen>
     <dimen name="dimen_8x">8dp</dimen>
+    <dimen name="dimen_10x">10dp</dimen>
     <dimen name="dimen_5x">5dp</dimen>
     <dimen name="dimen_18sp">18sp</dimen>
     <dimen name="dimen_16sp">16sp</dimen>

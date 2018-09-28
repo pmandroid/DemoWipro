@@ -12,12 +12,13 @@ import com.prashant.demowipro.model.bean.RowsItem;
 import com.prashant.demowipro.viewmodel.RawItemViewModel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * The type About adapter.
  */
-public class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.BindingHolder>  {
+public class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.BindingHolder> {
     private List<RowsItem> rowsItems;
 
     /**
@@ -46,14 +47,34 @@ public class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.BindingHolde
         return rowsItems.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     /**
      * Add item.
      *
      * @param rowsItem the rows item
      */
     public void addItem(List<RowsItem> rowsItem) {
+        removeEmptyRow(rowsItem);
         rowsItems.addAll(rowsItem);
         notifyItemInserted(rowsItems.size() - 1);
+    }
+
+    private void removeEmptyRow(List<RowsItem> rowsItem) {
+        for (Iterator<RowsItem> itr = rowsItem.iterator(); itr.hasNext(); ) {
+            RowsItem itrItem = itr.next();
+            if (itrItem.getDescription() == null || itrItem.getDescription().equalsIgnoreCase("")) {
+                itr.remove();
+            }
+        }
     }
 
     /**

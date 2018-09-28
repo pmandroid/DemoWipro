@@ -1,19 +1,14 @@
 package com.prashant.demowipro.model.data;
 
-import android.content.Context;
-
 import com.prashant.demowipro.model.bean.Response;
-import com.prashant.demowipro.utility.NetworkObserver;
 import com.prashant.demowipro.view.DemoApplication;
 
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -77,7 +72,7 @@ public class RetrofitHelper {
      *
      * @param subscriber the subscriber
      */
-    public void getDetails(Subscriber<Response> subscriber){
+    public void getDetails(Subscriber<Response> subscriber) {
 
         retrofitService.getDetails().map(new Func1<Response, Response>() {
             @Override

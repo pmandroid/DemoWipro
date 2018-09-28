@@ -11,30 +11,21 @@ public class Response {
     private List<RowsItem> rows;
 
     /**
-     * Set title.
-     *
-     * @param title the title
-     */
-    public void setTitle(String title){
-        this.title = title;
-    }
-
-    /**
      * Get title string.
      *
      * @return the string
      */
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
     /**
-     * Set rows.
+     * Set title.
      *
-     * @param rows the rows
+     * @param title the title
      */
-    public void setRows(List<RowsItem> rows){
-        this.rows = rows;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
@@ -42,12 +33,21 @@ public class Response {
      *
      * @return the list
      */
-    public List<RowsItem> getRows(){
+    public List<RowsItem> getRows() {
         return rows;
     }
 
+    /**
+     * Set rows.
+     *
+     * @param rows the rows
+     */
+    public void setRows(List<RowsItem> rows) {
+        this.rows = rows;
+    }
+
     @Override
-    public String toString(){
+    public String toString() {
         return
                 "Response{" +
                         "title = '" + title + '\'' +
