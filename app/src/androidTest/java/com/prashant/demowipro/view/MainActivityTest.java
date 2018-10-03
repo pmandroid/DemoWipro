@@ -1,7 +1,7 @@
 package com.prashant.demowipro.view;
 
 import android.support.test.rule.ActivityTestRule;
-import android.view.View;
+import android.support.v7.widget.RecyclerView;
 import android.widget.FrameLayout;
 
 import com.prashant.demowipro.R;
@@ -12,7 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class MainActivityTest {
 
@@ -38,10 +38,12 @@ public class MainActivityTest {
                 aboutListFragment).commit();
         getInstrumentation().waitForIdleSync();
 
-        View view = aboutListFragment.getView().findViewById(R.id.recycler_view);
-        assertNotNull(view);
+        RecyclerView recyclerView = aboutListFragment.getView().findViewById(R.id.recycler_view);
+        assertNotNull(recyclerView);
+
 
     }
+
 
 
     @After

@@ -1,9 +1,6 @@
 package com.prashant.demowipro.view;
 
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.prashant.demowipro.R;
 import com.prashant.demowipro.databinding.AboutListBinding;
@@ -50,6 +46,12 @@ public class AboutListFragment extends Fragment implements ICompletedListener, S
      */
     public static AboutListFragment getInstance() {
         return new AboutListFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        rxNetworkObservable();
     }
 
     @Nullable
@@ -91,7 +93,7 @@ public class AboutListFragment extends Fragment implements ICompletedListener, S
         if (aboutListFragmentBinding.swipeRefreshLayout.isRefreshing()) {
             aboutListFragmentBinding.swipeRefreshLayout.setRefreshing(false);
         }
-        if (viewModel != null) {
+        if (getActivity()!=null && isAdded() && viewModel != null) {
             getActivity().setTitle(viewModel.getTitle());
         }
     }
@@ -99,33 +101,32 @@ public class AboutListFragment extends Fragment implements ICompletedListener, S
     @Override
     public void onResume() {
         super.onResume();
-        rxNetworkObservable(getActivity());
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         compositeDisposable.add(internetDisposable);
+
     }
 
     /**
      * Rx network observable.
-     *
-     * @param context the context
      */
-    public void rxNetworkObservable(Context context) {
+    public void rxNetworkObservable() {
 
-        internetDisposable = ReactiveNetwork.observeNetworkConnectivity(getActivity())
+        internetDisposable = ReactiveNetwork
+                .observeNetworkConnectivity(DemoApplication.getContext())
+                .flatMapSingle(connectivity -> ReactiveNetwork.checkInternetConnectivity())
                 .subscribeOn(Schedulers.io())
-                .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
-                .filter(ConnectivityPredicate.hasType(ConnectivityManager.TYPE_WIFI))
-                .filter(ConnectivityPredicate.hasType(ConnectivityManager.TYPE_MOBILE))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(connectivity -> {
-                    if (connectivity.state().equals(NetworkInfo.State.CONNECTED)) {
-                        initData();
+                .subscribe(isConnected -> {
+                    if (isConnected) {
+                            initData();
                     }
-
                 });
+
+
     }
 }
