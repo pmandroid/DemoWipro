@@ -11,16 +11,16 @@ public class Response {
     private List<RowsItem> rows;
 
     /**
-     * Get title string.
+     * Gets title.
      *
-     * @return the string
+     * @return the title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * Set title.
+     * Sets title.
      *
      * @param title the title
      */
@@ -29,16 +29,16 @@ public class Response {
     }
 
     /**
-     * Get rows list.
+     * Gets rows.
      *
-     * @return the list
+     * @return the rows
      */
     public List<RowsItem> getRows() {
         return rows;
     }
 
     /**
-     * Set rows.
+     * Sets rows.
      *
      * @param rows the rows
      */

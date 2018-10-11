@@ -1,6 +1,6 @@
 package com.prashant.demowipro.view;
 
-
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +14,10 @@ import android.view.ViewGroup;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.prashant.demowipro.R;
 import com.prashant.demowipro.databinding.AboutListBinding;
+import com.prashant.demowipro.model.bean.Response;
 import com.prashant.demowipro.viewmodel.MainViewModel;
+
+import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -24,17 +27,11 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * The type About list fragment.
  */
-public class AboutListFragment extends Fragment implements ICompletedListener, SwipeRefreshLayout
+public class AboutListFragment extends Fragment implements SwipeRefreshLayout
         .OnRefreshListener {
 
-    /**
-     * The Internet disposable.
-     */
-    Disposable internetDisposable;
-    /**
-     * The Composite disposable.
-     */
-    CompositeDisposable compositeDisposable;
+    private Disposable internetDisposable;
+    private CompositeDisposable compositeDisposable;
     private MainViewModel viewModel;
     private AboutListBinding aboutListFragmentBinding;
     private AboutAdapter aboutAdapter;
@@ -59,11 +56,8 @@ public class AboutListFragment extends Fragment implements ICompletedListener, S
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle
             savedInstanceState) {
         View contentView = inflater.inflate(R.layout.about_list, container, false);
-
         compositeDisposable = new CompositeDisposable();
         aboutListFragmentBinding = AboutListBinding.bind(contentView);
-
-
         initData();
         return contentView;
     }
@@ -77,26 +71,20 @@ public class AboutListFragment extends Fragment implements ICompletedListener, S
         aboutListFragmentBinding.swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,
                 R.color.colorPrimary, R.color.colorPrimaryDark);
         aboutListFragmentBinding.swipeRefreshLayout.setOnRefreshListener(this);
-        viewModel = new MainViewModel(aboutAdapter, this);
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         aboutListFragmentBinding.setViewModel(viewModel);
+        observeViewModel(viewModel);
+
 
     }
 
     @Override
     public void onRefresh() {
         aboutAdapter.clearItems();
-        viewModel.refreshData();
+        viewModel.getDetails();
+        observeViewModel(viewModel);
     }
 
-    @Override
-    public void onCompleted() {
-        if (aboutListFragmentBinding.swipeRefreshLayout.isRefreshing()) {
-            aboutListFragmentBinding.swipeRefreshLayout.setRefreshing(false);
-        }
-        if (getActivity()!=null && isAdded() && viewModel != null) {
-            getActivity().setTitle(viewModel.getTitle());
-        }
-    }
 
     @Override
     public void onResume() {
@@ -123,10 +111,37 @@ public class AboutListFragment extends Fragment implements ICompletedListener, S
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isConnected -> {
                     if (isConnected) {
-                            initData();
+                        viewModel.getDetails();
+                        viewModel.getProgressBarVisibility().set(View.VISIBLE);
+                        viewModel.hideErrorMessage();
+
+                        observeViewModel(viewModel);
                     }
                 });
 
 
+    }
+
+    private void observeViewModel(MainViewModel viewModel) {
+        viewModel.getResponseObservable()
+                .observe(this, response -> {
+
+                    viewModel.getProgressBarVisibility().set(View.GONE);
+                    if (aboutListFragmentBinding.swipeRefreshLayout.isRefreshing()) {
+                        aboutListFragmentBinding.swipeRefreshLayout.setRefreshing(false);
+                    }
+                    if (response != null) {
+                        viewModel.hideErrorMessage();
+                        setData(response);
+                    } else {
+                        viewModel.showErrorMessage();
+                    }
+                });
+    }
+
+    private void setData(Response response) {
+        aboutAdapter.addItem(response.getRows());
+        Objects.requireNonNull(getActivity()).setTitle(response.getTitle());
+        aboutAdapter.notifyDataSetChanged();
     }
 }

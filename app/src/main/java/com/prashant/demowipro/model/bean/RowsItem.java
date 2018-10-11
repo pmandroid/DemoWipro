@@ -10,16 +10,16 @@ public class RowsItem {
     private String title;
 
     /**
-     * Get image href string.
+     * Gets image href.
      *
-     * @return the string
+     * @return the image href
      */
     public String getImageHref() {
         return imageHref;
     }
 
     /**
-     * Set image href.
+     * Sets image href.
      *
      * @param imageHref the image href
      */
@@ -28,16 +28,16 @@ public class RowsItem {
     }
 
     /**
-     * Get description string.
+     * Gets description.
      *
-     * @return the string
+     * @return the description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Set description.
+     * Sets description.
      *
      * @param description the description
      */
@@ -46,16 +46,16 @@ public class RowsItem {
     }
 
     /**
-     * Get title string.
+     * Gets title.
      *
-     * @return the string
+     * @return the title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * Set title.
+     * Sets title.
      *
      * @param title the title
      */

@@ -1,18 +1,19 @@
 package com.prashant.demowipro.model.data;
 
+import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
+
 import com.prashant.demowipro.model.bean.Response;
 import com.prashant.demowipro.view.DemoApplication;
 
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * The type Retrofit helper.
@@ -27,17 +28,13 @@ public class RetrofitHelper {
                 ("no-cache") ||
                 cacheControl.contains("must-revalidate") || cacheControl.contains("max-age=0")) {
             return originalResponse.newBuilder()
-                    .header("Cache-Control", "public, max-age=" + 10)
+                    .header("Cache-Control", "public, max-age=" + 60)
                     .build();
         } else {
             return originalResponse;
         }
     };
 
-    /**
-     * The Builder.
-     */
-    private OkHttpClient.Builder builder;
     private IRetrofitService retrofitService;
 
     private RetrofitHelper() {
@@ -45,7 +42,7 @@ public class RetrofitHelper {
 
         int cacheSize = 20 * 1024 * 1024;
         Cache cache = new Cache(DemoApplication.getContext().getCacheDir(), cacheSize);
-        builder = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addNetworkInterceptor(REWRITE_RESPONSE_INTERCEPTOR)
                 .cache(cache);
         Retrofit retrofit = new Retrofit.Builder()
@@ -70,25 +67,36 @@ public class RetrofitHelper {
     /**
      * Gets details.
      *
-     * @param subscriber the subscriber
+     * @return the details
      */
-    public void getDetails(Subscriber<Response> subscriber) {
+    public MutableLiveData<Response> getDetails() {
+        {
+            final MutableLiveData<Response> responseMutableLiveData = new MutableLiveData<>();
+            retrofitService.getDetails()
+                    .enqueue(new Callback<Response>() {
 
-        retrofitService.getDetails().map(new Func1<Response, Response>() {
-            @Override
-            public Response call(Response response) {
-                return response;
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
+                        @Override
+                        public void onResponse(@NonNull Call<Response> call, @NonNull retrofit2.Response<Response>
+                                response) {
+                            responseMutableLiveData.setValue(response.body());
 
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<Response> call, @NonNull Throwable t) {
+                            responseMutableLiveData.setValue(null);
+                        }
+                    });
+            return responseMutableLiveData;
+        }
     }
 
     private static class Singleton {
         private static final RetrofitHelper INSTANCE = new RetrofitHelper();
     }
-
-
 }
+
+
+
+
+

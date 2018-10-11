@@ -15,9 +15,6 @@ import com.prashant.demowipro.model.bean.RowsItem;
  */
 public class RawItemViewModel extends BaseObservable {
 
-    /**
-     * The Rows item.
-     */
     private RowsItem rowsItem;
 
     /**

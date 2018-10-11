@@ -2,8 +2,8 @@ package com.prashant.demowipro.model.data;
 
 import com.prashant.demowipro.model.bean.Response;
 
+import retrofit2.Call;
 import retrofit2.http.GET;
-import rx.Observable;
 
 /**
  * The interface Retrofit service.
@@ -21,5 +21,5 @@ public interface IRetrofitService {
      * @return the details
      */
     @GET("facts.json")
-    Observable<Response> getDetails();
+    Call<Response> getDetails();
 }

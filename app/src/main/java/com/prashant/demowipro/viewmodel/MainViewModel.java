@@ -1,21 +1,21 @@
 package com.prashant.demowipro.viewmodel;
 
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.databinding.ObservableField;
 import android.view.View;
 
 import com.prashant.demowipro.R;
 import com.prashant.demowipro.model.bean.Response;
 import com.prashant.demowipro.model.data.RetrofitHelper;
-import com.prashant.demowipro.view.AboutAdapter;
 import com.prashant.demowipro.view.DemoApplication;
-import com.prashant.demowipro.view.ICompletedListener;
-
-import rx.Subscriber;
 
 /**
  * The type Main view model.
  */
-public class MainViewModel {
+public class MainViewModel extends AndroidViewModel {
     /**
      * The Content view visibility.
      */
@@ -32,81 +32,28 @@ public class MainViewModel {
      * The Exception.
      */
     public ObservableField<String> exception;
-    private Subscriber<Response> subscriber;
-    private AboutAdapter aboutAdapter;
-    private String title;
-    private ICompletedListener completedListener;
+    private MutableLiveData<Response> responseMutableLiveData;
 
     /**
      * Instantiates a new Main view model.
      *
-     * @param aboutAdapter      the about adapter
-     * @param completedListener the completed listener
+     * @param application the application
      */
-    public MainViewModel(AboutAdapter aboutAdapter, ICompletedListener completedListener) {
-        this.aboutAdapter = aboutAdapter;
-        this.completedListener = completedListener;
+    public MainViewModel(Application application) {
+        super(application);
         initData();
         getDetails();
     }
 
-    private void getDetails() {
-        subscriber = new Subscriber<Response>() {
-            @Override
-            public void onCompleted() {
-                hideAll();
-                contentViewVisibility.set(View.VISIBLE);
-                completedListener.onCompleted();
-                errorInfoLayoutVisibility.set(View.GONE);
-            }
+    /**
+     * Gets details.
+     */
+    public void getDetails() {
+        responseMutableLiveData = RetrofitHelper.getInstance().getDetails();
 
-            @Override
-            public void onError(Throwable e) {
-                hideAll();
-                e.printStackTrace();
-                errorInfoLayoutVisibility.set(View.VISIBLE);
-
-                exception.set(DemoApplication.getContext().getResources().getString(R.string
-                        .no_internet));
-            }
-
-            @Override
-            public void onNext(Response item) {
-                aboutAdapter.addItem(item.getRows());
-                setTitle(item.getTitle());
-            }
-        };
-        RetrofitHelper.getInstance().getDetails(subscriber);
     }
 
-    /**
-     * Refresh data.
-     */
-    public void refreshData() {
-        getDetails();
-    }
 
-    /**
-     * Gets title.
-     *
-     * @return the title
-     */
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * Sets title.
-     *
-     * @param title the title
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    /**
-     * Initialise  data.
-     */
     private void initData() {
         contentViewVisibility = new ObservableField<>();
         progressBarVisibility = new ObservableField<>();
@@ -118,11 +65,40 @@ public class MainViewModel {
     }
 
     /**
-     * hide all data on error.
+     * Gets progress bar visibility.
+     *
+     * @return the progress bar visibility
      */
-    private void hideAll() {
-        contentViewVisibility.set(View.GONE);
-        errorInfoLayoutVisibility.set(View.GONE);
-        progressBarVisibility.set(View.GONE);
+    public ObservableField<Integer> getProgressBarVisibility() {
+        return progressBarVisibility;
     }
+
+    /**
+     * Gets response observable.
+     *
+     * @return the response observable
+     */
+    public LiveData<Response> getResponseObservable() {
+        return responseMutableLiveData;
+    }
+
+    /**
+     * Hide error message.
+     */
+    public void hideErrorMessage() {
+        errorInfoLayoutVisibility.set(View.GONE);
+        contentViewVisibility.set(View.VISIBLE);
+
+    }
+
+    /**
+     * Show error message.
+     */
+    public void showErrorMessage() {
+        errorInfoLayoutVisibility.set(View.VISIBLE);
+        contentViewVisibility.set(View.GONE);
+        exception.set(DemoApplication.getContext().getString(R.string
+                .no_internet));
+    }
+
 }
