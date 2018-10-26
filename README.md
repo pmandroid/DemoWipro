@@ -1,4 +1,4 @@
-# DemoWipro
+# Demo MVVM
 
 This app uses a Model-View-ViewModel (MVVM) architecture for the presentation layer.
 
